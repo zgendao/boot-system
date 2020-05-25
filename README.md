@@ -1,12 +1,12 @@
-# Collective Mind
+# ZGEN Project Template
 
 ## Build collaborative experiences and realtime apps
 
-With Collective Mindg, you can automatically synchronize your app data between devices.
+With our template, you can automatically synchronize your app data between devices.
 Get notified of data changes as they occur. 
 
 ## Features
-- [Feature 1](https://clojure.network/z/collective-mind)
+- [Feature 1](https://)
 - `Feature 2`
 
 ## Usage
