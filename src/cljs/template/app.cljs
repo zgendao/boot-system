@@ -52,9 +52,9 @@
   (r/render [page name app-state]
             (js/document.getElementById "app")))
 
-(defn ^:export run []
+(defn ^:export run [app-state]
   (b/start! router {:default :template.home
                     :html5? true
                     :on-navigate (fn [name params query] (on-navigate name params query app-state))}))
 
-(run)
+(run app-state)

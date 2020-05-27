@@ -6,21 +6,14 @@
     [differ.core :as differ]
     ))
 
-(defn edn->json [edn] (.stringify js/JSON (clj->js edn)))
-(defn edn->obj [edn] (clj->js edn))
-
-
-(defn ^:export init
+(defn init
   [args]
   (let [channel (atom nil)
         router (atom nil)
         sync (atom nil)
         database (r/atom nil)
         
-        {:keys [apikey host out protocol react] :as a}
-        (if (map? args)
-          args
-          (js->clj args :keywordize-keys true))
+        {:keys [apikey host out protocol react] :as a} args
         
         _ (js/console.log (str "Connecting to db: "apikey))
 
@@ -32,15 +25,7 @@
            :host   host
            :protocol protocol
            :type   :auto
-           :packer :edn}
-          )
-        
-        out (case out
-              "json" edn->json
-              "edn" identity
-              "obj" edn->obj
-              edn->json)
-        ]
+           :packer :edn})]
 
     (reset! channel channel-socket)
     
@@ -51,19 +36,11 @@
                      (fn [{:as ev-msg :keys [id ?data event]}]
                        (case id
                          :chsk/recv 
-                         (let [[operation data] ?data
-                               new-state
-                               (case operation
-                                 :data/reset (reset! database data)
+                         (let [[operation data] ?data]
+                           (case operation
                                  :data/patch (reset! database (differ/patch @database data))
-                                 :data/merge (swap! database merge data)
-                                 :data/deepmerge (swap! database x/deep-merge data)
-                                 :data/assoc (swap! database assoc (first data) (second data))
-                                 :data/associn (swap! database assoc-in (first data) (second data))
-                                 :data/dissoc (swap! database assoc data)
                                  :chsk/ws-ping nil
-                                 (js/console.log (str "Unknown " operation)))]
-                           (when react (react (out new-state))))
+                                 (js/console.log (str "Unknown " operation))))
                          :chsk/state (js/console.log "State!")
                          :chsk/handshake (reset! database (nth ?data 2))
                          (js/console.log "Not found"))
@@ -76,22 +53,6 @@
               (send-fn [:data/patch difference])
             ))))
     
-      {:raw database
-       :whole (fn [] (out @database))
-       
-       :reset (fn [data] (send-fn [:data/reset (js->clj data)]))
-       
-       :merge (fn [data] (send-fn [:data/merge (js->clj data)]))
-       :deepmerge (fn [data] (send-fn [:data/deepmerge (js->clj data)]))
-    
-       :assoc (fn [k data] (send-fn [:data/assoc [k (js->clj data)]]))
-       :associn (fn [k data] (send-fn [:data/associn [(js->clj k) (js->clj data)]]))
-       
-       :dissoc (fn [k] (send-fn [:data/dissoc k]))
-       
-       :get (fn [& path] (out (get-in @database (vec path))))
-       :getin (fn [path] (out (get-in @database (vec path))))
-       }
-    ))
+    database))
 
 
