@@ -3,6 +3,7 @@
             [environ.core :refer [env]]
             [hara.io.scheduler :as hara]
             [com.brunobonacci.sophia :as sph]
+            [differ.core :as differ]
 
             [template.routes :refer [site]]
             
@@ -103,6 +104,13 @@
     (case (name id)
     
       "reset" (sph/set-value! sophia "state" client-id ?data)
+      
+      "patch"
+      (sph/transact!
+        sophia
+        (fn [tx]
+          (let [u (sph/get-value tx "state" client-id)]
+            (when u (sph/set-value! tx "state" client-id (differ/patch u ?data))))))
        
       "merge"
       (sph/transact!

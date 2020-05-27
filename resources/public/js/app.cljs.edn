@@ -1,2 +1,2 @@
 {:require [template.app]
- :compiler-options {:asset-path "js/template.out"}}
+ :compiler-options {:asset-path "js/app.out"}}
