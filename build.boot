@@ -56,7 +56,7 @@
                  [reagent "0.8.0-alpha2"]
                  [reagi "0.10.1"]
                  [funcool/bide "1.6.0"]
-                 [com.cemerick/piggieback "0.2.1" :scope "test"]
+                 [cider/piggieback "0.5.0"]
                  [binaryage/devtools "0.9.4" :scope "test"]
                  [weasel "0.7.0" :scope "test"]
 
@@ -94,14 +94,16 @@
   []
   (comp
    (environ :env {:http-port "7000"})
-   (watch :verbose true)
+   (watch)
    (system :sys #'dev-system
            :auto true 
            :files ["system.clj" "server.clj"])
-;   (reload :asset-path "public")
-;   (cljs-repl)
-   (cljs :source-map true :optimizations :none)
-   (repl :server true)))
+   (cljs-repl)
+   (reload :on-jsload 'template.app/init)
+   (speak)
+   (cljs :optimizations :none)
+   ;(repl :server true)
+   ))
 
 (deftask cljsbuild
   "Build the project locally as a JAR."

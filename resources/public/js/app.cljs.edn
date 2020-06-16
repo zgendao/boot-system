@@ -1,2 +1,3 @@
 {:require [template.app]
+ :init-fns [template.app/init]
  :compiler-options {:asset-path "js/app.out"}}

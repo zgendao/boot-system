@@ -9,7 +9,7 @@
 (def app-state (api/init {:apikey "test"}))
 
 (defn home-page [app-state]
-  [:div "Home"
+  [:div "Home 2"
    [:p (str @app-state)]
    [:a {:on-click #(swap! app-state assoc "counter" (rand-int 1000))} "Assoc"]
    ])
@@ -45,16 +45,17 @@
      :template.home (home-page app-state)
      :template.about [about-page])])
 
-(defn on-navigate
-  "A function which will be called on each route change."
-  [name params query app-state]
-  (println "Route change to: " name params query)
-  (r/render [page name app-state]
-            (js/document.getElementById "app")))
+(defn ^:export render [name]
+  (r/render [page name app-state] (js/document.getElementById "app")))
 
-(defn ^:export run [app-state]
+(defn ^:export navigate
+  "A function which will be called on each route change."
+  [name params query]
+  (println "Route change to: " name params query)
+  (render name))
+
+(defn ^:export init []
+  (println "Loading..")
   (b/start! router {:default :template.home
                     :html5? true
-                    :on-navigate (fn [name params query] (on-navigate name params query app-state))}))
-
-(run app-state)
+                    :on-navigate (fn [name params query] (navigate name params query))}))
