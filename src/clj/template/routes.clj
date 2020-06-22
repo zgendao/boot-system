@@ -13,8 +13,6 @@
 
 (defn site [_]
   (routes
-    (POST "/post-test" ring-req (do (println (:params ring-req)) "Thank you!"))
-    (GET "/test" ring-req "Hello world!")
-    (GET "/" ring-req (app ring-req))
+    (GET "*" ring-req (app ring-req))
     (ANY "*" [] (hiccup/html [:h1 {:style {:text-align "center" :color "red"}} "NOT FOUND"]))
     ))
