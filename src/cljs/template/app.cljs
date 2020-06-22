@@ -6,7 +6,7 @@
 
 (enable-console-print!)
 
-(def app-state (api/init {:apikey "test"}))
+(def app-state (api/init {:apikey "test" :reagent? true}))
 
 (defn home-page [app-state]
   [:div "Home 2"
