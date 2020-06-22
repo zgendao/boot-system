@@ -213,7 +213,7 @@
                     
                     })
 
-    :site-middleware (new-middleware {:middleware [[wrap-defaults site-defaults]]})
+    :site-middleware (new-middleware {:middleware [[wrap-defaults (assoc-in site-defaults [:security :anti-forgery] false)]]})
     
     :site-endpoint (component/using (new-endpoint site) [:site-middleware])
 
