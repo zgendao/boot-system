@@ -32,6 +32,7 @@
 
                  [brave/zente "0.1.3-SNAPSHOT"]
                  [brave/swords "0.1.3-SNAPSHOT"]
+                 [brave/cmc "0.1.0-SNAPSHOT"]
 
                  [org.immutant/immutant "2.1.9"]
                  ;;; TODO Choose (uncomment) a supported web server -----------------------

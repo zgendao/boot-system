@@ -1,7 +1,7 @@
 (ns template.app
   (:require 
     [reagent.core :as r]
-    [template.api :as api]
+    [brave.cmc :as api]
     [bide.core :as b]))
 
 (enable-console-print!)
